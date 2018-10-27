@@ -38,7 +38,7 @@ public class ClientThread extends Thread
                 }
 
 
-                // 
+                //
                 if (clientIn.toUpperCase().contains(" HAS DISCONNECTED"))
                 {
                     writer.println("YOU HAVE DISCONNECTED");

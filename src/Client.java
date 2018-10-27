@@ -20,6 +20,7 @@ public class Client
 
     private void run()
     {
+        System.out.println("TEST GIT");
         name = PublicMethods.getString("Name: ");
 
         try
