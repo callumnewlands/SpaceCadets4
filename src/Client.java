@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+// TODO: close client when server goes down
+
 public class Client
 {
     private Socket serverSocket;
@@ -20,7 +22,7 @@ public class Client
 
     private void run()
     {
-        name = PublicMethods.getString("Name: ");
+
 
         try
         {
@@ -41,9 +43,13 @@ public class Client
 
     private void setup() throws IOException
     {
+
+        String ip = PublicMethods.getString("IP (enter \"localhost\" for same device): ");
+        name = PublicMethods.getString("Name: ");
+        
         try
         {
-            serverSocket = new Socket("localhost", MultiUserServer.PORT);
+            serverSocket = new Socket(ip, MultiUserServer.PORT);
             stdReader = new BufferedReader(new InputStreamReader(System.in));
             serverReader = new BufferedReader(new InputStreamReader((serverSocket.getInputStream())));
             writer = new PrintWriter(serverSocket.getOutputStream(), true);
@@ -51,7 +57,7 @@ public class Client
         }
         catch (IOException e)
         {
-            throw new IOException("Cannot connect to sever.", e);
+            throw new IOException("Cannot connect to Socket: " + ip + ":" + MultiUserServer.PORT + "\n Reason: " + e.getMessage() , e);
         }
 
     }

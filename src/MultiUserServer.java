@@ -16,6 +16,8 @@ public class MultiUserServer
 
     private void run()
     {
+        System.out.println("SERVER RUNNING");
+
         try (ServerSocket socket = new ServerSocket(PORT))
         {
             while (true)
