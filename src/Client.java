@@ -3,21 +3,35 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.lang.Runtime;
 
 // TODO: close client when server goes down
+// TODO: add thread wait
 
 public class Client
 {
-    private Socket serverSocket;
+
     private String name;
     private PrintWriter writer;
     private BufferedReader stdReader;
     private BufferedReader serverReader;
+    private Socket serverSocket;
 
     public static void main(String[] args)
     {
         Client client = new Client();
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run()
+            {
+                System.out.println("Disconnecting");
+                client.disconnectFromServer();
+            }
+        });
+
         client.run();
+
     }
 
     private void run()
@@ -46,7 +60,7 @@ public class Client
 
         String ip = PublicMethods.getString("IP (enter \"localhost\" for same device): ");
         name = PublicMethods.getString("Name: ");
-        
+
         try
         {
             serverSocket = new Socket(ip, MultiUserServer.PORT);
@@ -88,10 +102,10 @@ public class Client
             if (serverIn != null )
             {
                 System.out.println(serverIn);
-            }
-            if (serverIn.equals("YOU HAVE DISCONNECTED"))
-            {
-                System.exit(0);
+                if (serverIn.equals("YOU HAVE DISCONNECTED"))
+                {
+                    System.exit(0);
+                }
             }
         }
     }
@@ -110,9 +124,16 @@ public class Client
                 }
                 else
                 {
-                    sendToServer(name.toUpperCase() + " HAS DISCONNECTED", true);
+                    disconnectFromServer();
                 }
             }
         }
     }
+
+    private void disconnectFromServer()
+    {
+        sendToServer(name.toUpperCase() + " HAS DISCONNECTED", true);
+    }
+
+
 }
